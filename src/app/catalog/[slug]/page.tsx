@@ -9,7 +9,9 @@ import { getProduct, getProducts, getStock } from "@/server/queries";
 
 // Страницы известных товаров собираются заранее; новые товары рендерятся при первом запросе
 export async function generateStaticParams() {
-  return (await getProducts()).map((p) => ({ slug: p.slug }));
+  const slugs = (await getProducts()).map((p) => ({ slug: p.slug }));
+  // Cache Components требует хотя бы один адрес при сборке; при пустом каталоге (демо) — служебный, он отдаёт «не найдено»
+  return slugs.length > 0 ? slugs : [{ slug: "_empty" }];
 }
 
 export async function generateMetadata({ params }: PageProps<"/catalog/[slug]">): Promise<Metadata> {

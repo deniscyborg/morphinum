@@ -43,7 +43,9 @@ async function CatalogContent({ searchParams }: { searchParams: PageProps<"/cata
       </nav>
 
       {products.length === 0 ? (
-        <p className="mt-10 text-muted">В этой категории пока нет товаров.</p>
+        <p className="mt-10 text-muted">
+          {categories.length === 0 ? "Каталог наполняется — первые товары скоро появятся." : "В этой категории пока нет товаров."}
+        </p>
       ) : (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((p) => (

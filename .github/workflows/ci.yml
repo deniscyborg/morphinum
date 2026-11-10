@@ -56,3 +56,55 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker build -t morphinum:ci .
+
+  deploy:
+    name: Deploy to VPS
+    needs: [test, docker]
+    # Деплой включается, когда в репозитории задана переменная SITE_DOMAIN
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.SITE_DOMAIN != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: |
+          docker build \
+            --build-arg NEXT_PUBLIC_SITE_URL=https://${{ vars.SITE_DOMAIN }} \
+            --build-arg NEXT_PUBLIC_SHOP_DEMO=${{ vars.SHOP_DEMO || '1' }} \
+            -t morphinum:latest .
+          docker save morphinum:latest | gzip > morphinum.tar.gz
+
+      - name: Upload image
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: morphinum.tar.gz
+          target: /root/morphinum
+
+      - name: Restart container
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd /root/morphinum
+            gunzip -c morphinum.tar.gz | docker load
+            rm morphinum.tar.gz
+            docker rm -f morphinum 2>/dev/null || true
+            # База заказов живёт в томе morphinum-data и переживает обновления
+            docker run -d --name morphinum --restart unless-stopped \
+              -p 127.0.0.1:3100:3000 \
+              -v morphinum-data:/app/data \
+              morphinum:latest
+            docker image prune -f
+
+      - name: Smoke check
+        run: |
+          code=$(curl --silent --location --retry 10 --retry-delay 3 --retry-all-errors -o /dev/null -w "%{http_code}" "https://${{ vars.SITE_DOMAIN }}/catalog")
+          echo "HTTP $code"
+          [ "$code" = "200" ]

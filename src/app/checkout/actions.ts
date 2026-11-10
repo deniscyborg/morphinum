@@ -20,6 +20,8 @@ const FIELDS = ["name", "phone", "email", "delivery", "address", "comment"] as c
 export async function checkout(_prev: CheckoutState, form: FormData): Promise<CheckoutState> {
   const values = Object.fromEntries(FIELDS.map((f) => [f, String(form.get(f) ?? "")]));
 
+  if (shop.demo) return { message: "Это демо-версия магазина: заказы пока не принимаются.", values };
+
   // Скрытое поле-ловушка: человек его не видит и не заполняет, а спам-бот заполняет
   if (form.get("website")) return { message: "Не удалось оформить заказ. Попробуйте ещё раз.", values };
 

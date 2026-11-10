@@ -26,6 +26,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="ru" className={`${inter.variable} ${cormorant.variable}`}>
       <body>
         <CartProvider>
+          {shop.demo && (
+            <div role="note" className="bg-ink px-4 py-2 text-center text-sm text-paper">
+              Демо-версия магазина: каталог наполняется, заказы пока не принимаются.
+            </div>
+          )}
           <SiteHeader />
           <main className="mx-auto max-w-6xl px-4 sm:px-6">{children}</main>
           <SiteFooter />

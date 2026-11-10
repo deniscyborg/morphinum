@@ -2,6 +2,7 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { shop } from "@/config/shop";
 import { migrate, seedIfEmpty } from "./schema";
 
 /**
@@ -18,7 +19,8 @@ export function getDb(): DatabaseSync {
     const db = new DatabaseSync(DB_PATH);
     db.exec("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;");
     migrate(db);
-    seedIfEmpty(db);
+    // В демо-витрине каталог пуст: тестовые товары не подставляются
+    if (!shop.demo) seedIfEmpty(db);
     globalForDb.morphinumDb = db;
   }
   return globalForDb.morphinumDb;

@@ -7,6 +7,12 @@ export const shop = {
   tagline: "Оригинальная продукция с гарантией подлинности",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 
+  /**
+   * Демо-витрина: все страницы магазина на месте, но каталог пуст и заказы не принимаются.
+   * Включается при сборке: NEXT_PUBLIC_SHOP_DEMO=1.
+   */
+  demo: process.env.NEXT_PUBLIC_SHOP_DEMO === "1",
+
   contacts: {
     phone: null as string | null, // "+7 900 000-00-00"
     email: "info@morphinum.ru" as string | null,

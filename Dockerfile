@@ -6,6 +6,10 @@ RUN npm ci
 COPY . .
 # База для пререндеринга каталога при сборке; рабочая база живёт в томе /app/data
 ENV DATABASE_PATH=/tmp/build.db
+# Значения NEXT_PUBLIC_* встраиваются в сборку, поэтому передаются здесь
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ARG NEXT_PUBLIC_SHOP_DEMO=0
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL     NEXT_PUBLIC_SHOP_DEMO=$NEXT_PUBLIC_SHOP_DEMO
 RUN npm run build
 
 # Запуск: только самодостаточная сборка Next.js
