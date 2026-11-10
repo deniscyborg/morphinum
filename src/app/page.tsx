@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { HeroSlider } from "@/components/HeroSlider";
 import { ProductCard } from "@/components/ProductCard";
 import { shop } from "@/config/shop";
+import { slides } from "@/config/slides";
 import { getProducts } from "@/server/queries";
 
 const PROMISES = [
@@ -9,43 +12,20 @@ const PROMISES = [
   { title: "Без регистрации", text: "Оформите заказ за минуту — менеджер перезвонит, уточнит детали и время доставки." },
 ];
 
-const HERO_COLORS = ["#2f3e46", "#7f5539"];
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function HomePage() {
   const featured = (await getProducts()).filter((p) => p.stock > 0).slice(0, 3);
 
   return (
     <>
-      <section className="grid gap-10 py-16 md:grid-cols-[1.2fr_1fr] md:items-center md:py-24">
-        <div>
-          <p className="text-sm tracking-[0.2em] text-accent uppercase">{shop.name}</p>
-          <h1 className="mt-4 font-serif text-5xl leading-[1.05] font-semibold sm:text-6xl">{shop.tagline}</h1>
-          <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">
-            Небольшой магазин, где каждая позиция проверена лично. Никаких подделок и серого импорта — только то, за что мы
-            готовы ручаться.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/catalog" className="btn-primary">
-              Перейти в каталог
-            </Link>
-            <Link href="/delivery" className="btn-outline">
-              Доставка и оплата
-            </Link>
-          </div>
-        </div>
-        <div className="hidden grid-cols-2 gap-4 md:grid" aria-hidden="true">
-          {/* Пока каталог пуст — декоративные плашки в цветах витрины */}
-          {(featured.length > 0 ? featured.slice(0, 2).map((p) => p.color) : HERO_COLORS).map((color, i) => (
-            <div
-              key={i}
-              className={`aspect-[3/4] rounded-2xl ${i === 1 ? "mt-10" : ""}`}
-              style={{ background: `linear-gradient(160deg, ${color}, color-mix(in srgb, ${color} 55%, black))` }}
-            />
-          ))}
-        </div>
-      </section>
+      {/* Заголовок страницы для поисковиков и экранных дикторов; на экране его роль играют слайды */}
+      <h1 className="sr-only">
+        {shop.name} — {shop.tagline}
+      </h1>
+      <HeroSlider slides={slides} />
 
-      <section aria-labelledby="promises" className="border-y border-line py-12">
+      <section aria-labelledby="promises" className="mt-12 border-y border-line py-12">
         <h2 id="promises" className="sr-only">
           Почему мы
         </h2>

@@ -4,7 +4,11 @@ import { Suspense } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { getCategories, getProducts } from "@/server/queries";
 
-export const metadata: Metadata = { title: "Каталог" };
+export const metadata: Metadata = {
+  title: "Каталог одежды",
+  description: "Каталог оригинальной брендовой одежды Morphinum: верхняя одежда, базовые вещи и аксессуары с подтверждением подлинности.",
+  alternates: { canonical: "/catalog" },
+};
 
 export default function CatalogPage({ searchParams }: PageProps<"/catalog">) {
   return (

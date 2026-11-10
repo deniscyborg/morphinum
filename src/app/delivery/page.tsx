@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { shop } from "@/config/shop";
 
-export const metadata: Metadata = { title: "Доставка и оплата" };
+export const metadata: Metadata = {
+  title: "Доставка и оплата",
+  description: "Доставка одежды курьером по городу и самовывоз, оплата при получении. Бесплатная курьерская доставка от суммы заказа.",
+  alternates: { canonical: "/delivery" },
+};
 
 export default function DeliveryPage() {
   const { courierPriceRub, freeCourierFromRub } = shop.delivery;

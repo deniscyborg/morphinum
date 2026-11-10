@@ -18,13 +18,13 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL(shop.url),
   title: { default: `${shop.name} — ${shop.tagline}`, template: `%s — ${shop.name}` },
-  description: `${shop.name}: ${shop.tagline.toLowerCase()}. Доставка по городу и самовывоз.`,
+  description: shop.description,
   openGraph: {
     type: "website",
     siteName: shop.name,
     locale: "ru_RU",
     title: `${shop.name} — ${shop.tagline}`,
-    description: `${shop.name}: ${shop.tagline.toLowerCase()}. Доставка по городу и самовывоз.`,
+    description: shop.description,
     images: [{ url: "/og.jpg", width: 1200, height: 630 }],
   },
   // Демо-витрина без товаров в поиск не попадает; после запуска (без флага демо) индексация включается сама
