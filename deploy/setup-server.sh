@@ -75,6 +75,12 @@ for f in /etc/nginx/sites-enabled/*; do
     ok "Из $real убрано блоков для $DOMAIN: $n"
   fi
   rm -f "$tmp"
+  # В блоке по умолчанию certbot мог заменить «server_name _» на имя магазина. Комментируем эту строку,
+  # иначе nginx отдаёт домен блоку default («conflicting server name … ignored»)
+  if grep -qE "^[[:space:]]*server_name[^#]*$DOMAIN" "$real"; then
+    sed -i -E "s/^([[:space:]]*server_name[^#]*$DOMAIN.*)$/# \1/" "$real"
+    ok "В $real закомментировано server_name $DOMAIN"
+  fi
 done
 
 # 5. Сертификат: используем уже выпущенный; если его нет — выпускаем, не меняя конфиги nginx
