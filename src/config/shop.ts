@@ -9,7 +9,7 @@ export const shop = {
 
   contacts: {
     phone: null as string | null, // "+7 900 000-00-00"
-    email: null as string | null, // "hello@morphinum.ru"
+    email: "info@morphinum.ru" as string | null,
     telegram: null as string | null, // "https://t.me/morphinum"
     city: "Москва",
   },
