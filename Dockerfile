@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+# Папки public в репозитории может не быть (нет статических файлов), а финальный образ её копирует
+RUN mkdir -p public
 # База для пререндеринга каталога при сборке; рабочая база живёт в томе /app/data
 ENV DATABASE_PATH=/tmp/build.db
 # Значения NEXT_PUBLIC_* встраиваются в сборку, поэтому передаются здесь
