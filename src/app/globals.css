@@ -1,1 +1,66 @@
 @import "tailwindcss";
+
+@theme {
+  --color-paper: #f7f4ef;
+  --color-card: #ffffff;
+  --color-ink: #1c1917;
+  --color-muted: #6b625a;
+  --color-line: #e7e0d6;
+  --color-accent: #7a1f2b;
+  --color-accent-dark: #5c1620;
+  --color-success: #2f6b3a;
+  --color-danger: #b42318;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), Georgia, serif;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply w-full rounded-md border border-line bg-white px-3 py-2.5 text-ink outline-none transition-colors;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply border-accent;
+  }
+
+  input[aria-invalid="true"],
+  textarea[aria-invalid="true"] {
+    @apply border-danger;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    @apply w-auto accent-accent;
+  }
+}
+
+/* Tailwind 4: собственные классы, которые можно применять через @apply, объявляются через @utility */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility btn-primary {
+  @apply btn bg-accent text-white hover:bg-accent-dark;
+}
+
+@utility btn-outline {
+  @apply btn border border-ink/20 text-ink hover:border-ink;
+}

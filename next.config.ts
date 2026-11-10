@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Самодостаточная сборка для Docker: в образ попадает только нужное для запуска
+  output: "standalone",
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

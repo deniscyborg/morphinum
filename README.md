@@ -1,34 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Morphinum
 
-## Getting Started
+Сайт-визитка и лёгкий интернет-магазин оригинальной продукции: каталог с категориями, корзина без регистрации,
+оформление заказа с доставкой или самовывозом. Проект также служит примером в портфолио — с юнит- и e2e-тестами и CI.
 
-First, run the development server:
+## Стек
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 16 (App Router, Cache Components, Server Actions), React 19, TypeScript, Tailwind CSS 4
+- SQLite через встроенный в Node.js модуль `node:sqlite` — без отдельного сервера базы данных
+- Vitest — юнит-тесты логики и работы с базой (SQLite в памяти)
+- Playwright — e2e-тесты пути покупателя на десктопе и телефоне
+- GitHub Actions, Docker
+
+## Как устроено
+
+| Что | Где |
+|---|---|
+| Деньги, корзина, доставка, проверка формы заказа — чистые функции | `src/lib/` |
+| Схема базы, каталог, оформление заказа одной транзакцией | `src/server/` |
+| Кешированные запросы каталога (`"use cache"` + тег) | `src/server/queries.ts` |
+| Серверное действие оформления заказа | `src/app/checkout/actions.ts` |
+| Настройки магазина: контакты, доставка, лимиты | `src/config/shop.ts` |
+| Демо-каталог (заменить реальными товарами) | `src/server/seed.ts` |
+
+Ключевые решения:
+
+- **Цены хранятся в копейках** (целые числа) — без ошибок округления.
+- **Сервер не доверяет корзине**: цены и остатки при оформлении берутся из базы, заказ и списание остатков — одна транзакция.
+- **Ссылка на заказ — случайный токен**, а не номер: номера идут подряд и угадываются.
+- После заказа кеш каталога сбрасывается (`updateTag`), и остатки обновляются сразу.
+- Защита от спама — скрытое поле-ловушка; согласие на обработку персональных данных обязательно.
+
+## Команды
+
+```sh
+npm ci
+npm run dev          # http://localhost:3000
+npm test             # юнит-тесты
+npm run build
+npm run test:e2e     # e2e против собранного приложения, база создаётся заново
+npm run lint
+npm run typecheck
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Нужен Node.js 22.13+ (рекомендуется 24): в нём `node:sqlite` доступен без флагов.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Docker
 
-## Learn More
+```sh
+docker build -t morphinum .
+docker run -p 3000:3000 -v morphinum-data:/app/data morphinum
+```
 
-To learn more about Next.js, take a look at the following resources:
+База лежит в томе `/app/data` и переживает обновления контейнера.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Перед запуском
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Реальные товары и фото вместо демо-каталога
+- [ ] Контакты в `src/config/shop.ts`
+- [ ] Политика обработки персональных данных (152-ФЗ) и, как правило, уведомление Роскомнадзора
+- [ ] Уведомление о новых заказах (почта или Telegram) и простая админка
+- [ ] Деплой на VPS рядом с остальными проектами, домен morphinum.ru
