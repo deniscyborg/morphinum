@@ -63,7 +63,7 @@ function CategoryLink({ href, active, children }: { href: string; active: boolea
       href={href}
       aria-current={active ? "page" : undefined}
       className={`inline-block rounded-full border px-4 py-1.5 text-sm transition-colors ${
-        active ? "border-ink bg-ink text-paper" : "border-line bg-white text-muted hover:border-ink hover:text-ink"
+        active ? "border-ink bg-ink text-paper" : "border-line bg-card text-muted hover:border-ink hover:text-ink"
       }`}
     >
       {children}

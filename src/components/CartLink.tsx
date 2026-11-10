@@ -6,7 +6,7 @@ import { useCart } from "./CartProvider";
 export function CartLink() {
   const { count, ready } = useCart();
   return (
-    <Link href="/cart" className="relative inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-white">
+    <Link href="/cart" className="relative inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-card">
       <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <path d="M6 7h12l-1 13H7L6 7Z" strokeLinejoin="round" />
         <path d="M9 7a3 3 0 0 1 6 0" />

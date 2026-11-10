@@ -60,7 +60,7 @@ export function CheckoutForm() {
             {deliveryMethods.map((method) => (
               <label
                 key={method}
-                className={`flex cursor-pointer items-start gap-3 rounded-md border bg-white p-4 ${
+                className={`flex cursor-pointer items-start gap-3 rounded-md border bg-card p-4 ${
                   delivery === method ? "border-accent" : "border-line"
                 }`}
               >

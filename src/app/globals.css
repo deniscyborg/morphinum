@@ -15,13 +15,42 @@
   --font-serif: var(--font-cormorant), Georgia, serif;
 }
 
+/* Тёмная тема по настройке системы: меняются только значения цветов, разметка та же */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #15120f;
+    --color-card: #1f1b17;
+    --color-ink: #f1ebe3;
+    --color-muted: #a99f94;
+    --color-line: #36302a;
+    --color-accent: #c24a5c;
+    --color-accent-dark: #a63a4b;
+    --color-success: #6bb877;
+    --color-danger: #f07463;
+  }
+}
+
 @layer base {
   html {
-    color-scheme: light;
+    color-scheme: light dark;
   }
 
   body {
     @apply bg-paper font-sans text-ink antialiased;
+  }
+
+  /* Длинные русские слова («конфиденциальности») в крупных заголовках переносятся, а не растягивают экран телефона */
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+  }
+  @media (max-width: 480px) {
+    h1,
+    h2,
+    h3 {
+      hyphens: auto;
+    }
   }
 
   :focus-visible {
@@ -32,7 +61,7 @@
   input,
   textarea,
   select {
-    @apply w-full rounded-md border border-line bg-white px-3 py-2.5 text-ink outline-none transition-colors;
+    @apply w-full rounded-md border border-line bg-card px-3 py-2.5 text-ink outline-none transition-colors;
   }
 
   input:focus,

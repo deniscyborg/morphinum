@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { CartProvider } from "@/components/CartProvider";
@@ -19,6 +19,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(shop.url),
   title: { default: `${shop.name} — ${shop.tagline}`, template: `%s — ${shop.name}` },
   description: `${shop.name}: ${shop.tagline.toLowerCase()}. Доставка по городу и самовывоз.`,
+  openGraph: {
+    type: "website",
+    siteName: shop.name,
+    locale: "ru_RU",
+    title: `${shop.name} — ${shop.tagline}`,
+    description: `${shop.name}: ${shop.tagline.toLowerCase()}. Доставка по городу и самовывоз.`,
+    images: [{ url: "/og.jpg", width: 1200, height: 630 }],
+  },
+  // Демо-витрина без товаров в поиск не попадает; после запуска (без флага демо) индексация включается сама
+  robots: shop.demo ? { index: false, follow: true } : undefined,
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f4ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#15120f" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
